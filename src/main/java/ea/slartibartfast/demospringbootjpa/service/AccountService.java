@@ -37,7 +37,7 @@ public class AccountService {
         var account = accountRepository.findAccountByExternalId(UUID.fromString(accountDto.getExternalId())).orElseThrow(EntityNotFoundException::new);
         account.setName(accountDto.getName());
         log.info("Account new name: {}", account.getName());
-        return Optional.of(accountRepository.save(account)).map(accountMapper::fromEntity).orElseThrow(EntityCannotPersistedException::new);
+        return Optional.of(accountRepository.save(account)).map(accountMapper::fromEntityIgnoreTransaction).orElseThrow(EntityCannotPersistedException::new);
     }
 
     public AccountDto deleteAccount(String externalId) {

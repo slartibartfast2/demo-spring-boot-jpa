@@ -3,6 +3,9 @@ package ea.slartibartfast.demospringbootjpa.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.envers.AuditOverride;
+import org.hibernate.envers.AuditOverrides;
+import org.hibernate.envers.Audited;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -13,6 +16,11 @@ import java.util.UUID;
 @Setter
 @EqualsAndHashCode(callSuper = false)
 @Entity(name = "transactions")
+@Audited
+@AuditOverrides({
+        @AuditOverride(forClass = AuditBaseEntity.class),
+        @AuditOverride(forClass = BaseEntity.class)
+})
 @Table(name = "transactions")
 @SQLRestriction("deleted_at is null")
 public class Transaction extends AuditBaseEntity {

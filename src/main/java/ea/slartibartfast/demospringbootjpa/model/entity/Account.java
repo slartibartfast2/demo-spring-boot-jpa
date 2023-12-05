@@ -5,9 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JoinFormula;
 import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.envers.*;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -16,6 +16,11 @@ import java.util.Objects;
 @EqualsAndHashCode(callSuper = false)
 @Entity(name = "accounts")
 @Table(name = "accounts")
+@Audited
+@AuditOverrides({
+        @AuditOverride(forClass = AuditBaseEntity.class),
+        @AuditOverride(forClass = BaseEntity.class)
+})
 @SQLRestriction("deleted_at is null")
 @NamedEntityGraph(name = "Account.latestTransaction",
         attributeNodes = @NamedAttributeNode("latestTransaction")
@@ -26,6 +31,7 @@ public class Account extends AuditBaseEntity {
 
     private BigDecimal balance;
 
+    @NotAudited
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinFormula("(" +
             "SELECT trx.id " +
